@@ -5,7 +5,7 @@
         <title>demo</title>
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <script type="text/javascript" src="../vendor/vue.min.js"></script>
-        <script type="text/javascript" src="../vue.lazyimg.js"></script>
+        <script type="text/javascript" src="vue.lazyimg.eg.js"></script>
         <style media="screen">
             #vue img {
                 transition: opacity 1s !important;
@@ -36,7 +36,9 @@
             /**
              * 对屏幕滚动的速度的阈值，滚动速度高于此值时，不加载图片
              */
-            speed: 20
+            speed: 20,
+            //for test
+            defer: 1000,
         })
         </script>
 
@@ -67,7 +69,7 @@
             </div>
         </div>
         <script id="tmpl2" type="text/vue">
-            <img src="default.jpg" v-for="item in [1,2,3,4,5,6,7,8,9,10]" v-lazyload:opt.fadein="img" width="300px" height="170px">
+            <img src="default.jpg" v-for="item in [1,2,3,4,5,6,7,8,9,10]" v-lazyload:opt.fadein="img" width="300px" height="150px">
         </script>
         <script type="text/javascript">
             new Vue({
@@ -87,7 +89,7 @@
             </div>
         </div>
         <script id="tmpl3" type="text/vue">
-            <img src="default.jpg" v-for="item in [1,2,3,4,5,6,7,8,9,10]" v-lazyload:opt.nohori="img" width="300px" height="170px">
+            <img src="default.jpg" v-for="item in [1,2,3,4,5,6,7,8,9,10]" v-lazyload:opt.nohori="img" width="300px" height="150px">
         </script>
         <script type="text/javascript">
             new Vue({
