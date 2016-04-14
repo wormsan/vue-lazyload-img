@@ -5,7 +5,7 @@
         <title>demo</title>
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <script type="text/javascript" src="../vendor/vue.min.js"></script>
-        <script type="text/javascript" src="../vue.lazyimg.js"></script>
+        <script type="text/javascript" src="vue.lazyimg.eg.js"></script>
         <style media="screen">
             #vue img {
                 transition: opacity 1s !important;
@@ -36,7 +36,9 @@
             /**
              * 对屏幕滚动的速度的阈值，滚动速度高于此值时，不加载图片
              */
-            speed: 20
+            speed: 20,
+            //for test
+            defer: 1000,
         })
         </script>
 
