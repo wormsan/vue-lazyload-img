@@ -100,6 +100,7 @@
                         this.el.src = value
                         this.el.addEventListener('load',onloadEnd)
                         window.removeEventListener('scrollEnd',compute,true)
+                        window.removeEventListener('resize',compute,true)
                         window.removeEventListener('scroll',computeBySpeed,true)
                         lastSpeeds = []
                     }.bind(this)
@@ -121,6 +122,7 @@
                     compute();
                     this.el.removeEventListener('load',onload)
                     window.addEventListener('scrollEnd',compute,true)
+                    window.addEventListener('resize',compute,true)
                     window.addEventListener('scroll',computeBySpeed,true)
                 }.bind(this)
                 var onloadEnd = function(){
