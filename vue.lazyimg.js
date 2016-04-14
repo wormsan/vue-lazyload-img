@@ -52,8 +52,8 @@
             var lastSpeeds = []
             var aveSpeed = 0
             function getSpeed(el){
-                var curPosY = el.getBoundingClientRect().top
-                var curPosX = el.getBoundingClientRect().left
+                var curPosY = el ? el.getBoundingClientRect().top : 0
+                var curPosX = el ? el.getBoundingClientRect().left: 0
                 var speedY = lastPosY - curPosY
                 var speedX = lastPosX - curPosX
                 if(lastSpeeds.length<10){
@@ -71,8 +71,15 @@
                 lastPosX = curPosX
             }
             document.addEventListener('scroll',function(e){
-                if(options.speed)
-                    getSpeed(e.target.body.parentNode)
+                if(!options.speed) return
+                var el = null
+                for(var i=0; i<e.target.childNodes.length; i++){
+                    if(e.target.childNodes[i].nodeType == 1){
+                        el = e.target.childNodes[i]
+                        break;
+                    }
+                }
+                getSpeed(el)
             },true)
 
             //vue directive update
@@ -80,9 +87,9 @@
                 var isFadeIn = this.modifiers.fadein || options.fadein
                 var isNoHori = this.modifiers.nohori || options.nohori
                 if(isFadeIn){
-                    this.el.style.opacity = 0;
-                    this.el.style.transition = 'opacity .3s';
-                    this.el.style.webkitTransition = 'opacity .3s';
+                    this.el.style.opacity = 0
+                    this.el.style.transition = 'opacity .3s'
+                    this.el.style.webkitTransition = 'opacity .3s'
                 }
                 var compute = function(){
                     var rect = this.el.getBoundingClientRect();
@@ -118,7 +125,7 @@
                 }.bind(this)
                 var onloadEnd = function(){
                     if(isFadeIn)
-                        this.el.style.opacity = 1;
+                        this.el.style.opacity = 1
                     this.el.removeEventListener('load',onloadEnd)
                 }.bind(this)
                 this.el.addEventListener('load',onload)
