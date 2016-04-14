@@ -47,8 +47,8 @@
                 },true)
             }
             //compute scroll speed
-            var lastPosY = document.children[0].getBoundingClientRect().top
-            var lastPosX = document.children[0].getBoundingClientRect().left
+            var lastPosY = document.body ? document.body.getBoundingClientRect().top : document.head.parentNode.getBoundingClientRect().top
+            var lastPosX = document.body ? document.bodya.getBoundingClientRect().left : document.head.parentNode.getBoundingClientRect().left
             var lastSpeeds = []
             var aveSpeed = 0
             function getSpeed(el){
@@ -72,7 +72,7 @@
             }
             document.addEventListener('scroll',function(e){
                 if(options.speed)
-                    getSpeed(e.target.children[0])
+                    getSpeed(e.target.body.parentNode)
             },true)
 
             //vue directive update
@@ -86,15 +86,15 @@
                 }
                 var compute = function(){
                     var rect = this.el.getBoundingClientRect();
-                    var vpWidth = document.children[0].clientWidth
-                    var vpHeight = document.children[0].clientHeight
+                    var vpWidth = document.head.parentNode.clientWidth
+                    var vpHeight = document.head.parentNode.clientHeight
                     var loadImg = function(){
                         var self = this
-                        self.el.src = value
-                        self.el.addEventListener('load',onloadEnd)
+                        this.el.src = value
+                        this.el.addEventListener('load',onloadEnd)
                         window.removeEventListener('scrollEnd',compute,true)
                         window.removeEventListener('scroll',computeBySpeed,true)
-                    lastSpeeds = []
+                        lastSpeeds = []
                     }.bind(this)
                     if(this.el.src == value)return
                     if(isNoHori){
