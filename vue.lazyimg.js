@@ -48,7 +48,7 @@
             }
             //compute scroll speed
             var lastPosY = document.body ? document.body.getBoundingClientRect().top : document.head.parentNode.getBoundingClientRect().top
-            var lastPosX = document.body ? document.bodya.getBoundingClientRect().left : document.head.parentNode.getBoundingClientRect().left
+            var lastPosX = document.body ? document.body.getBoundingClientRect().left : document.head.parentNode.getBoundingClientRect().left
             var lastSpeeds = []
             var aveSpeed = 0
             function getSpeed(el){
