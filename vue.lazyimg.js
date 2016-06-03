@@ -21,6 +21,11 @@
 
     Vue.lazyimg ={
         install: function(Vue,options){
+            options = options || {
+                fadein: false,
+                speed: 20,
+                nohori: false
+            }
             //custom scrollEnd event
             if(options.speed){
                 var cntr = 0
