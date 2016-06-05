@@ -4,5 +4,8 @@ module.exports = {
         path: __dirname,
         filename: "./dist/vue.lazyimg.js",
         libraryTarget: 'umd',
-    }
+    },
+    externals: {
+        'Vue': 'vue'
+    },
 };
