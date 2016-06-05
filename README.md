@@ -40,6 +40,15 @@ Vue.use(Vue.lazyimg,{
 })
 ```
 
+### directive
+
+#### v-lazyload
+
+* v-lazyload="src"
+* v-lazyload:opt.nohri="src"
+* v-lazyload:opt.fadein="src"
+* v-lazyload:opt.nohri.fadein="src"
+
 ## How to import?
 
 ### In CommonJs
@@ -65,15 +74,6 @@ Vue.install(Vue.lazyimg)
 ### In browser
 
 because this plugins supports `umd`, so you can use it as a `<script>` or with JS module loader like `require.js`.
-
-### directive
-
-#### v-lazyload
-
-* v-lazyload="src"
-* v-lazyload:opt.nohri="src"
-* v-lazyload:opt.fadein="src"
-* v-lazyload:opt.nohri.fadein="src"
 
 ## 介绍
     vue图片懒加载插件，特别为移动端优化
