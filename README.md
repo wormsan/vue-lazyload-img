@@ -63,13 +63,13 @@ es6
 
 ``` javascript
 import "vue-lazyload-img"
-Vue.install(Vue.lazyimg)
+Vue.use(Vue.lazyimg)
 ```
 es5
 
 ``` javascript
 require("vue-lazyload-img")
-Vue.install(Vue.lazyimg)
+Vue.use(Vue.lazyimg)
 ```
 ### In browser
 
@@ -142,13 +142,13 @@ es6
 
 ``` javascript
 import "vue-lazyload-img"
-Vue.install(Vue.lazyimg)
+Vue.use(Vue.lazyimg)
 ```
 es5
 
 ``` javascript
 require("vue-lazyload-img")
-Vue.install(Vue.lazyimg)
+Vue.use(Vue.lazyimg)
 ```
 #### 在浏览器中
 
