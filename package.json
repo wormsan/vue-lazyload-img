@@ -23,7 +23,7 @@
     "url": "https://github.com/JALBAA/vue-lazyload-img/issues"
   },
   "homepage": "https://github.com/JALBAA/vue-lazyload-img#readme",
-  "devDependencies": {
+  "dependencies": {
     "vue": "^1.0.24"
   }
 }

@@ -40,6 +40,32 @@ Vue.use(Vue.lazyimg,{
 })
 ```
 
+## How to import?
+
+### In CommonJs
+
+#### 1st
+``` shell
+npm install vue-lazyload-img
+```
+
+#### 2nd
+es6
+
+``` javascript
+import "vue-lazyload-img"
+Vue.install(Vue.lazyimg)
+```
+es5
+
+``` javascript
+require("vue-lazyload-img")
+Vue.install(Vue.lazyimg)
+```
+### In browser
+
+because this plugins supports `umd`, so you can use it as a `<script>` or with JS module loader like `require.js`.
+
 ### directive
 
 #### v-lazyload
@@ -100,3 +126,30 @@ Vue.use(Vue.lazyimg,{
 * v-lazyload:opt.nohri="src"
 * v-lazyload:opt.fadein="src"
 * v-lazyload:opt.nohri.fadein="src"
+
+
+## 如何引入?
+
+### 在CommonJs中
+
+#### 首先
+``` shell
+npm install vue-lazyload-img
+```
+
+#### 然后
+es6
+
+``` javascript
+import "vue-lazyload-img"
+Vue.install(Vue.lazyimg)
+```
+es5
+
+``` javascript
+require("vue-lazyload-img")
+Vue.install(Vue.lazyimg)
+```
+#### 在浏览器中
+
+由于使用了`umd`规范，所以可以用`<script>`标签引入，或使用其他的JS模块加载器，比如`require.js`
