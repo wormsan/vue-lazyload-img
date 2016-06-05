@@ -6,6 +6,6 @@ module.exports = {
         libraryTarget: 'umd',
     },
     externals: {
-        'Vue': 'vue'
+        'vue': 'Vue'
     },
 };
