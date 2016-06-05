@@ -1,0 +1,29 @@
+{
+  "name": "vue-lazyload-img",
+  "version": "0.1.2",
+  "description": "image-lazyload plugin for vue",
+  "main": "src/vue.lazyimg.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JALBAA/vue-lazyload-img.git"
+  },
+  "keywords": [
+    "vue",
+    "lazyload"
+  ],
+  "author": "jalbaa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JALBAA/vue-lazyload-img/issues"
+  },
+  "homepage": "https://github.com/JALBAA/vue-lazyload-img#readme",
+  "devDependencies": {
+    "vue": "^1.0.24"
+  }
+}
