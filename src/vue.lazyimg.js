@@ -20,7 +20,7 @@ Vue.lazyimg ={
             var lastCntr = 0
             var diff = 0
             var scrollEnd = document.createEvent('HTMLEvents');
-            scrollEnd.initEvent('scrollEnd')
+            scrollEnd.initEvent('scrollEnd',true,false)
             scrollEnd.eventType = 'message'
             function enterFrame(){
                 if(cntr != lastCntr){
@@ -92,7 +92,6 @@ Vue.lazyimg ={
                 var vpWidth = document.head.parentNode.clientWidth
                 var vpHeight = document.head.parentNode.clientHeight
                 var loadImg = function(){
-                    var self = this
                     this.el.src = value
                     this.el.addEventListener('load',onloadEnd)
                     window.removeEventListener('scrollEnd',compute,true)
