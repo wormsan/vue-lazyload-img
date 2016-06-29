@@ -1,3 +1,4 @@
+var webpack = require('webpack')
 module.exports = {
     entry: "./src/vue.lazyimg.js",
     output: {
@@ -8,4 +9,7 @@ module.exports = {
     externals: {
         'vue': 'Vue'
     },
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin()
+    ]
 };
