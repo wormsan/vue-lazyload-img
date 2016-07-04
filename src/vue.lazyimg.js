@@ -77,9 +77,6 @@ Vue.lazyimg ={
 
         //vue directive update
         function update(value){
-            if (this.el === null) {
-                return;
-            }
             var isFadeIn = this.modifiers.fadein || options.fadein
             var isNoHori = this.modifiers.nohori || options.nohori
             if(isFadeIn){
@@ -88,6 +85,9 @@ Vue.lazyimg ={
                 this.el.style.webkitTransition = 'opacity .3s'
             }
             var compute = function(){
+                if (this.el === null) {
+                    return;
+                }
                 var rect = this.el.getBoundingClientRect();
                 var vpWidth = document.head.parentNode.clientWidth
                 var vpHeight = document.head.parentNode.clientHeight
@@ -115,12 +115,15 @@ Vue.lazyimg ={
             }.bind(this)
             var onload = function(){
                 compute();
-                this.el.removeEventListener('load',onload)
+                this.el && this.el.removeEventListener('load',onload)
                 window.addEventListener('scrollEnd',compute,true)
                 window.addEventListener('resize',compute,true)
                 window.addEventListener('scroll',computeBySpeed,true)
             }.bind(this)
             var onloadEnd = function(){
+                if (this.el === null) {
+                    return;
+                }
                 if(isFadeIn)
                     this.el.style.opacity = 1
                 this.el.removeEventListener('load',onloadEnd)
