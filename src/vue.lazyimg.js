@@ -77,6 +77,9 @@ Vue.lazyimg ={
 
         //vue directive update
         function update(value){
+            if (!value) {
+                return;
+            }
             var isFadeIn = this.modifiers.fadein || options.fadein
             var isNoHori = this.modifiers.nohori || options.nohori
             if(isFadeIn){
