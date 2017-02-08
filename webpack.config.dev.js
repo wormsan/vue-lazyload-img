@@ -1,8 +1,8 @@
 var path = require('path');
 module.exports = {
-    entry: './src/index.js',
+    entry: './test/test.js',
     output: {
-        path: path.resolve(__dirname, 'bin'),
+        path: path.resolve(__dirname, 'dev'),
         filename: 'build.js',
         // export itself to a global var
         libraryTarget: "umd",
