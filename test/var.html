@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="http://cdn.bootcss.com/vue/2.1.4/vue.js"></script>
+    <script src="../dist/vue.lazyimg.js"></script>
+    <div id="app">
+    </div>
+    <script type="text/v-template" id="template">
+        <div id="app" >
+            <!--on roadmap
+                <div style="overflow:scroll;">
+                <div  style="display:-webkit-box;width:3000px;height:300px;">
+                    <img v-for="img in imgs"
+                        v-lazyload="img"
+                        src="./images/blocker.jpg" 
+                        style="display:block;height:400px;">    
+                </div>
+            </div>-->
+            <div id="container"  v-for="img in imgs" >
+                <img v-lazyload="img"
+                    src="./images/blocker.jpg" 
+                    style="display:block;width:100%;">    
+            </div>
+        </div>
+    </script>
+    <style>
+        #app #container {
+            background-image: url(./images/bg.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    </style>
+    <script>
+        Vue.use(Lazyload, {
+            //ms
+            time: 200,
+            fade: true,
+            nohori: false
+        })
+        var a = new Vue({
+            el: '#app',
+            template: document.querySelector('#template').innerHTML,
+            data: {
+                imgs: [
+                    './images/1.jpg',
+                    './images/2.jpg',
+                    './images/3.jpg',
+                    './images/4.jpg',
+                    './images/5.jpg',
+                    './images/6.jpg',
+                    './images/7.jpg',
+                    './images/8.jpg'
+                ]
+            }
+        })
+        console.log(a)
+    </script>
+</body>
+</html>

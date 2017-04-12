@@ -3,7 +3,7 @@ export default function(){
     let lastCntr = 0
     let diff = 0
     const scrollEnd = document.createEvent('HTMLEvents');
-    scrollEnd.initEvent('scrollEnd');
+    scrollEnd.initEvent('scrollEnd',true, false);
     scrollEnd.eventType = 'message';
     function enterFrame(){
         if(cntr !== lastCntr){

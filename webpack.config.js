@@ -1,25 +1,47 @@
-var path = require('path');
-module.exports = {
-    entry: './src/index.js',
-    output: {
-        path: path.resolve(__dirname, 'bin'),
-        filename: 'build.js',
-        // export itself to a global var
-        libraryTarget: "umd",
-        // name of the global var: "GomeUIKit"
-        library: "Lazyload"
-    },
-    externals: {
-        'vue': 'Vue',
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: 'babel-loader'
-            },
-        ]
-    },
-    
+const path = require('path');
+const webpack = require('webpack');
+function build(name){
+    const config = {
+        entry: './src/index.js',
+        output: {
+            path: path.resolve(__dirname, 'dist'),
+            filename: name,
+            libraryTarget: "umd",
+            library: "Lazyload"
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.js$/, 
+                    loader: "babel-loader"
+                }
+            ]
+        },
+        plugins: []
+    }
+    if(name.match(/\.min/)){
+        config.plugins.push(
+            new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                    warnings: false,
+                    drop_console: false,
+                }
+            })
+        )
+    }
+    if(name.match(/\.bundle/)){
+        
+        config.entry =  './test/bundle.test.js'
+        config.output = {
+            path: path.resolve(__dirname, 'test'),
+            filename: name,
+        }
+    }else{
+        config.externals = {
+            'vue': 'Vue',
+        }
+    }
+    return config
 }
+
+module.exports = [build('vue.lazyimg.js'),build('vue.lazyload.bundle.js'), build('vue.lazyimg.min.js')]
