@@ -1,13 +1,10 @@
 {
   "author": "jalbaa",
-  "dependencies": {
-    "babel-preset-es2015": "^6.24.1",
-    "vue": "^2.0.0"
-  },
   "description": "",
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
+    "babel-preset-es2015": "^6.24.1",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "mocha-phantomjs": "^4.1.0",
@@ -20,7 +17,7 @@
   },
   "license": "MIT",
   "main": "src/index.js",
-  "name": "gome-ui-lazyload",
+  "name": "vue-lazyload-img",
   "optionalDependencies": {},
   "readme": "ERROR: No README data found!",
   "scripts": {
