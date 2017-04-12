@@ -1,6 +1,6 @@
 {
   "name": "vue-lazyload-img",
-  "version": "0.1.6",
+  "version": "1.0.0",
   "description": "image-lazyload plugin for vue",
   "main": "src/vue.lazyimg.js",
   "directories": {
