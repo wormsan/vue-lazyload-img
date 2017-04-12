@@ -18,7 +18,7 @@ vue图片懒加载插件，特别为移动端优化
 [var with script tag](http://docs.gomeminus.com/vue-lazyload-img/test/var.html)
 
 
-[bundle with webpack](http://docs.gomeminus.com/vue-lazyload-img/test/bund.html)
+[bundle with webpack](http://docs.gomeminus.com/vue-lazyload-img/test/bundle.html)
 
 
 ## 如何引入?
