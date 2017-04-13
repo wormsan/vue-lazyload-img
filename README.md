@@ -1,9 +1,92 @@
-# 目前新版本升级到v2，使用v1的同志们，请使用`npm install vue-lazyload-img@1`安装
-
-*English Doc will be update in here*
-
-
 # vue-lazyload-img
+
+## intro
+    a plugin of vue for image lazyload, especially optimized for mobile browser
+## demo
+
+[var with script tag](http://docs.gomeminus.com/vue-lazyload-img/test/var.html)
+
+
+[bundle with webpack](http://docs.gomeminus.com/vue-lazyload-img/test/bundle.html)
+
+## API
+
+### init
+
+Vue.use(Lazyload[,options])
+
+### options
+global options
+#### fade: all images will use fadein fx
+
+* true: all images will fadein if lazyload Complete
+* false **(default)**: no fadein fx of all
+
+#### speed: threshold of loading lazyload iamge
+
+* 0 **(default)**: load lazy-image when the image is visible at the 1st time
+* >0 **(recommend 20)**: average changes of document y-pos and any scroller's x-pos from last 10 frames, awesome in mobile browsers
+
+```
+Vue.use(Vue.lazyimg,{
+    fade: true,
+    speed: 20,
+})
+```
+
+### directive
+
+#### v-lazyload
+
+* v-lazyload="src"
+* v-lazyload:opt.nohri="src"
+* v-lazyload:opt.fadein="src"
+* v-lazyload:opt.nohri.fadein="src"
+
+## How to import?
+
+### In CommonJs
+
+#### 1st
+``` shell
+npm install vue-lazyload-img
+```
+
+#### 2nd
+
+es6
+```
+import Lazyload from "vue-lazyload-img"
+Vue.use(Lazyload)
+```
+es5
+
+```
+var Lazyload = require("vue-lazyload-img")
+Vue.use(Lazyload)
+```
+
+
+**in this way, you'll need `babel` or something like it**
+
+### In browser
+
+because this plugins supports `umd`, so you can use it as a `<script>` or with JS module loader like `require.js`.
+
+the released bundle is in:
+
+`dist/vue.lazyimg.min.js`
+`dist/vue.lazyimg.js`
+
+# roadmap
+
+* to support the API in v1 but not in v2 now
+* make a UI component system with future libs
+
+# chinese doc
+# vue-lazyload-img
+
+# 目前新版本升级到v2，使用v1的同志们，请使用`npm install vue-lazyload-img@1`安装
 
 ## 介绍
 
