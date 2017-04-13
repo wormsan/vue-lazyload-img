@@ -1,4 +1,7 @@
 # English doc
+
+# Finally Available on vue2, if you use v1, use `npm install vue-lazyload-img@1`
+
 # vue-lazyload-img
 
 ## intro
