@@ -1,3 +1,4 @@
+# English doc
 # vue-lazyload-img
 
 ## intro
@@ -24,13 +25,18 @@ global options
 
 #### speed: threshold of loading lazyload iamge
 
-* 0 **(default)**: load lazy-image when the image is visible at the 1st time
-* >0 **(recommend 20)**: average changes of document y-pos and any scroller's x-pos from last 10 frames, awesome in mobile browsers
+* 0 : load lazy-image when the image is visible at the 1st time
+* >0 **(defult 20)**: average changes of document y-pos and any scroller's x-pos from last 10 frames, awesome in mobile browsers
+
+#### time: duration of fade in or fade out
+
+* 300 **(default, unit: ms)**
 
 ```
-Vue.use(Vue.lazyimg,{
+Vue.use(Lazyload,{
     fade: true,
     speed: 20,
+    time: 300
 })
 ```
 
@@ -39,9 +45,6 @@ Vue.use(Vue.lazyimg,{
 #### v-lazyload
 
 * v-lazyload="src"
-* v-lazyload:opt.nohri="src"
-* v-lazyload:opt.fadein="src"
-* v-lazyload:opt.nohri.fadein="src"
 
 ## How to import?
 
@@ -83,7 +86,7 @@ the released bundle is in:
 * to support the API in v1 but not in v2 now
 * make a UI component system with future libs
 
-# chinese doc
+# Chinese doc
 # vue-lazyload-img
 
 # 目前新版本升级到v2，使用v1的同志们，请使用`npm install vue-lazyload-img@1`安装
