@@ -8,6 +8,8 @@
     a plugin of vue for image lazyload, especially optimized for mobile browser
 ## demo
 
+Use mobile mode if possible
+
 [var with script tag](http://docs.gomeminus.com/vue-lazyload-img/test/var.html)
 
 
