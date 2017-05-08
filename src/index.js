@@ -96,7 +96,7 @@ const lazyload = {
                     window.addEventListener('scroll', computeBySpeed)
                     window.addEventListener('scrollEnd', onScrollEnd)
                 }
-                el.onerror = function () {
+                el.addEventListener('error', function () {
                     el.onload = new Function()
                     el.onerror = new Function()
                     window.removeEventListener('scroll', computeBySpeed)
