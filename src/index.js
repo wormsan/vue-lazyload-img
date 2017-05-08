@@ -101,8 +101,10 @@ const lazyload = {
                     el.onerror = new Function()
                     window.removeEventListener('scroll', computeBySpeed)
                     window.removeEventListener('scrollEnd', onScrollEnd)
-                }
-                //compute(el, options.time)
+                })
+                setTimeout(function(){
+                    compute(el, options.time)
+                })
             },
             update (el, binding) {
                 if(compareSrc(el.src,binding.value))return
