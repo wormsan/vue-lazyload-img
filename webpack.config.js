@@ -30,7 +30,11 @@ function build(name){
         )
     }
     if(name.match(/\.bundle/)){
-        
+        config.resolve = {
+            alias: {
+                'vue': 'vue/dist/vue.min.js'
+            }
+        }
         config.entry =  './test/bundle.test.js'
         config.output = {
             path: path.resolve(__dirname, 'test'),
