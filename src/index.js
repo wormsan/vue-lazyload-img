@@ -91,17 +91,18 @@ const lazyload = {
                 }
                 el.onload = function() {
                     el.onload = new Function()
-                    el.onerror = new Function()
+                    el.removeEventListener('error', onError)
                     compute(el, options.time)
                     window.addEventListener('scroll', computeBySpeed)
                     window.addEventListener('scrollEnd', onScrollEnd)
                 }
-                el.addEventListener('error', function () {
+                function onError () {
                     el.onload = new Function()
-                    el.onerror = new Function()
+                    el.removeEventListener('error', onError)
                     window.removeEventListener('scroll', computeBySpeed)
                     window.removeEventListener('scrollEnd', onScrollEnd)
-                })
+                }
+                el.addEventListener('error', onError)
                 setTimeout(function(){
                     compute(el, options.time)
                 })

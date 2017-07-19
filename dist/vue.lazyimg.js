@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -129,6 +129,7 @@ var options = {
     time: 300,
     fade: false,
     speed: 20
+    //nohori: true
 };
 
 (0, _scrollEnd2.default)();
@@ -211,18 +212,21 @@ var lazyload = {
                 };
                 el.onload = function () {
                     el.onload = new Function();
-                    el.onerror = new Function();
+                    el.removeEventListener('error', onError);
                     compute(el, options.time);
                     window.addEventListener('scroll', computeBySpeed);
                     window.addEventListener('scrollEnd', onScrollEnd);
                 };
-                el.onerror = function () {
+                function onError() {
                     el.onload = new Function();
-                    el.onerror = new Function();
+                    el.removeEventListener('error', onError);
                     window.removeEventListener('scroll', computeBySpeed);
                     window.removeEventListener('scrollEnd', onScrollEnd);
-                };
-                //compute(el, options.time)
+                }
+                el.addEventListener('error', onError);
+                setTimeout(function () {
+                    compute(el, options.time);
+                });
             },
             update: function update(el, binding) {
                 if (compareSrc(el.src, binding.value)) return;
