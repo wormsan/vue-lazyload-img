@@ -120,4 +120,4 @@ const lazyload = {
     }
 }
 
-module.exports = lazyload
+export default lazyload
