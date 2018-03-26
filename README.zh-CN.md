@@ -30,6 +30,40 @@ vue图片懒加载插件，特别为移动端优化
 [bundle with webpack](http://docs.gomeminus.com/vue-lazyload-img/test/bundle.html)
 
 
+## API
+
+### 初始化
+
+Vue.use(Lazyload[, options])
+
+### options
+global options
+
+#### fade: 是否开启渐显效果
+
+* true: all images will fadein if lazyload Complete
+* false **(default)**: no fadein fx of all
+
+#### speed: 一个检测屏幕速度的阈值，默认值已经改为0，考虑到现在的硬件性能的提高，没有太大必要再做细微检测
+
+* 0 : load lazy-image when the image is visible at the 1st time
+* >0 **(defult 0)**: average changes of document y-pos and any scroller's x-pos from last 10 frames
+
+#### time: 渐显的时间，单位是毫秒
+
+* 300 **(default, unit: ms)**
+
+```
+Vue.use(Lazyload,{
+    // default false, recommand true
+    fade: true,
+    // it's better not set the speed now
+    // speed: 20, 
+    // default 300, it's not necessary to set it I think
+    time: 300
+})
+```
+
 ## 如何引入?
 
 ### 在CommonJs中
@@ -66,7 +100,7 @@ Vue.use(Lazyload)
 ### 兼容
 
 * 目前v2不支持可扩展的`directive`
-* 目前不支持横向检测（nohori暂时失效）
+* <dev>目前不支持横向检测（nohori暂时失效）</dev>已支持，且为自动检测
 
 *上述问题后续版本会解决*
 

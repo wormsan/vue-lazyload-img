@@ -46,7 +46,7 @@ global options
 #### speed: threshold of loading lazyload iamge
 
 * 0 : load lazy-image when the image is visible at the 1st time
-* >0 **(defult 20)**: average changes of document y-pos and any scroller's x-pos from last 10 frames, awesome in mobile browsers
+* >0 **(defult 0)**: average changes of document y-pos and any scroller's x-pos from last 10 frames
 
 #### time: duration of fade in or fade out
 
@@ -54,8 +54,11 @@ global options
 
 ```
 Vue.use(Lazyload,{
+    // default false, recommand true
     fade: true,
-    speed: 20,
+    // it's better not set the speed now
+    // speed: 20, 
+    // default 300, it's not necessary to set it I think
     time: 300
 })
 ```
