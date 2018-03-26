@@ -7,7 +7,7 @@
 		exports["Lazyload"] = factory();
 	else
 		root["Lazyload"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,9 +43,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -73,11 +70,171 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _scrollEnd = __webpack_require__(1);
+
+var _scrollEnd2 = _interopRequireDefault(_scrollEnd);
+
+var _Set = __webpack_require__(2);
+
+var _Set2 = _interopRequireDefault(_Set);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var scrollListeners = new _Set2.default();
+var scrollEndListeners = new _Set2.default();
+
+window.addEventListener('scroll', function (e) {
+    scrollListeners.forEach(function (listener) {
+        listener();
+    });
+}, true);
+
+window.addEventListener('scrollEnd', function (e) {
+    scrollEndListeners.forEach(function (listener) {
+        listener();
+    });
+}, true);
+
+var compute = function compute(el, time, cb) {
+    var rect = el.getBoundingClientRect();
+    if ((rect.bottom >= 0 && rect.bottom <= window.screen.height || rect.top >= 0 && rect.top <= window.screen.height) && (rect.right >= 0 && rect.right <= window.screen.width || rect.left >= 0 && rect.left <= window.screen.width)) {
+        if (el.src != el.newSrc && !!el.newSrc) {
+            el.src = el.newSrc;
+            el.onload = function () {
+                el.style.opacity = '1';
+                el.onload = new Function();
+                scrollListeners.delete(el.__scrollListener__);
+                scrollEndListeners.delete(el.__scrollEndListener__);
+                el.__scrollListener__ = null;
+                el.__scrollEndListener__ = null;
+            };
+            el.style.transition = 'opacity ' + time + 'ms';
+            if (cb) {
+                cb();
+            }
+        }
+    }
+};
+var getSpeed = function getSpeed(_ref) {
+    var lastPos = _ref.lastPos,
+        lastSpeeds = _ref.lastSpeeds,
+        aveSpeed = _ref.aveSpeed;
+
+    var curPos = document.body.getBoundingClientRect().top;
+    var speed = lastPos - curPos;
+    if (lastSpeeds.length < 10) {
+        lastSpeeds.push(speed);
+    } else {
+        lastSpeeds.shift();
+        lastSpeeds.push(speed);
+    }
+    var sumSpeed = 0;
+    lastSpeeds.forEach(function (speed) {
+        sumSpeed += speed;
+    });
+    aveSpeed = Math.abs(sumSpeed / lastSpeeds.length);
+    lastPos = curPos;
+    return {
+        lastPos: lastPos,
+        lastSpeeds: lastSpeeds,
+        aveSpeed: aveSpeed
+    };
+};
+var compareSrc = function compareSrc(src, newSrc) {
+    if (src.replace(/^http:/, '').replace(/^https:/, '').match(newSrc.replace(/^http:/, '').replace(/^https:/, ''))) {
+        return true;
+    } else return false;
+};
+
+var lazyload = {
+    install: function install(Vue, _ref2) {
+        var _ref2$time = _ref2.time,
+            time = _ref2$time === undefined ? 300 : _ref2$time,
+            _ref2$fade = _ref2.fade,
+            fade = _ref2$fade === undefined ? false : _ref2$fade,
+            _ref2$speed = _ref2.speed,
+            speed = _ref2$speed === undefined ? 0 : _ref2$speed;
+
+        if (speed > 0) (0, _scrollEnd2.default)();
+        Vue.directive('lazyload', {
+            inserted: function inserted(el, binding, vnode, oldVnode) {
+                if (!el) return;
+                if (compareSrc(el.src, binding.value)) return;
+                if (fade) el.style.opacity = 0;
+                if (!el.src) {
+                    el.src = 'data:image/gifbase64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+                }
+                var speedInfo = {
+                    lastPos: document.body.getBoundingClientRect().top,
+                    lastSpeeds: [],
+                    aveSpeed: 0
+                };
+                el.newSrc = binding.value;
+                var computeBySpeed = function computeBySpeed() {
+                    if (!el.newSrc || el.newSrc === el.src) return;
+                    if (speed == 0) {
+                        compute(el, time);
+                        return;
+                    }
+                    speedInfo = getSpeed(speedInfo);
+                    if (speedInfo.aveSpeed > speed) return;
+                    compute(el, time);
+                };
+                var onScrollEnd = function onScrollEnd() {
+                    if (!el.newSrc || el.newSrc === el.src) return;
+                    compute(el, time);
+                };
+                el.__scrollListener__ = computeBySpeed;
+                el.__scrollEndListener__ = onScrollEnd;
+                el.onload = function () {
+                    el.onload = new Function();
+                    el.removeEventListener('error', onError);
+                    compute(el, time);
+                    scrollListeners.add(computeBySpeed);
+                    if (speed > 0) scrollEndListeners.add(onScrollEnd);
+                };
+                function onError() {
+                    el.onload = new Function();
+                    el.removeEventListener('error', onError);
+                    scrollListeners.delete(computeBySpeed);
+                    scrollEndListeners.delete(onScrollEnd);
+                }
+                el.addEventListener('error', onError);
+                // setTimeout(function(){
+                //     compute(el, time)
+                // })
+            },
+            update: function update(el, binding) {
+                if (compareSrc(el.src, binding.value)) return;
+                el.style.opacity = 0;
+                el.style.transition = 'opacity ' + time / 2 + 'ms';
+                el.newSrc = binding.value;
+                setTimeout(function () {
+                    compute(el, time / 2);
+                }, 150);
+            }
+        });
+    }
+};
+
+exports.default = lazyload;
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -112,136 +269,70 @@ exports.default = function () {
     });
 };
 
+if (!window.requestAnimationFrame) {
+    if (window.webkitRequestAnimationFrame) {
+        window.requestAnimationFrame = window.webkitRequestAnimationFrame;
+    } else {
+        window.requestAnimationFrame = function (cb) {
+            setTimeout(function () {
+                cb();
+            }, 1000 / 60);
+        };
+    }
+}
+
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _scrollEnd = __webpack_require__(0);
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-var _scrollEnd2 = _interopRequireDefault(_scrollEnd);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var options = {
-    time: 300,
-    fade: false,
-    speed: 20
-    //nohori: true
-};
+// simple Set
+var cid = 0;
 
-(0, _scrollEnd2.default)();
-var compute = function compute(el, time, cb) {
-    var rect = el.getBoundingClientRect();
-    if ((rect.bottom >= 0 && rect.bottom <= window.screen.height || rect.top >= 0 && rect.top <= window.screen.height) && (rect.right >= 0 && rect.right <= window.screen.width || rect.left >= 0 && rect.left <= window.screen.width)) {
-        if (el.src != el.newSrc && !!el.newSrc) {
-            el.src = el.newSrc;
-            el.onload = function () {
-                el.style.opacity = '1';
-                el.onload = new Function();
-            };
-            el.style.transition = 'opacity ' + time + 'ms';
-            if (cb) {
-                cb();
+var Set = function () {
+    function Set() {
+        _classCallCheck(this, Set);
+
+        this._map = {};
+    }
+
+    _createClass(Set, [{
+        key: "add",
+        value: function add(obj) {
+            obj.__cid__ = cid;
+            cid++;
+            this._map[obj.__cid__] = obj;
+        }
+    }, {
+        key: "delete",
+        value: function _delete(obj) {
+            if (obj && obj.__cid__ && this._map.hasOwnProperty(obj.__cid__)) delete this._map[obj.__cid__];
+        }
+    }, {
+        key: "forEach",
+        value: function forEach(cb) {
+            for (var key in this._map) {
+                if (this._map.hasOwnProperty(key)) {
+                    cb(this._map[key]);
+                }
             }
         }
-    }
-};
-var getSpeed = function getSpeed(opt) {
-    var lastPos = opt.lastPos;
-    var lastSpeeds = opt.lastSpeeds;
-    var aveSpeed = opt.aveSpeed;
-    var curPos = document.body.getBoundingClientRect().top;
-    var speed = lastPos - curPos;
-    if (lastSpeeds.length < 10) {
-        lastSpeeds.push(speed);
-    } else {
-        lastSpeeds.shift();
-        lastSpeeds.push(speed);
-    }
-    var sumSpeed = 0;
-    lastSpeeds.forEach(function (speed) {
-        sumSpeed += speed;
-    });
-    aveSpeed = Math.abs(sumSpeed / lastSpeeds.length);
-    lastPos = curPos;
-    return {
-        lastPos: lastPos,
-        lastSpeeds: lastSpeeds,
-        aveSpeed: aveSpeed
-    };
-};
-var compareSrc = function compareSrc(src, newSrc) {
-    if (src.replace(/^http:/, '').replace(/^https:/, '').match(newSrc.replace(/^http:/, '').replace(/^https:/, ''))) {
-        return true;
-    } else return false;
-};
+    }]);
 
-var lazyload = {
-    install: function install(Vue, _options) {
-        if (_options) {
-            for (var key in _options) {
-                options[key] = _options[key];
-            }
-        }
-        Vue.directive('lazyload', {
-            inserted: function inserted(el, binding, vnode, oldVnode) {
-                if (!el) return;
-                if (compareSrc(el.src, binding.value)) return;
-                if (options.fade) el.style.opacity = 0;
-                if (!el.src) {
-                    el.src = 'data:image/gifbase64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-                }
-                var speed = {
-                    lastPos: document.body.getBoundingClientRect().top,
-                    lastSpeeds: [],
-                    aveSpeed: 0
-                };
-                el.newSrc = binding.value;
-                var computeBySpeed = function computeBySpeed() {
-                    if (!el.newSrc || el.newSrc === el.src) return;
-                    speed = getSpeed(speed);
-                    if (speed.aveSpeed > options.speed) return;
-                    compute(el, options.time);
-                };
-                var onScrollEnd = function onScrollEnd() {
-                    if (!el.newSrc || el.newSrc === el.src) return;
-                    compute(el, options.time);
-                };
-                el.onload = function () {
-                    el.onload = new Function();
-                    el.removeEventListener('error', onError);
-                    compute(el, options.time);
-                    window.addEventListener('scroll', computeBySpeed);
-                    window.addEventListener('scrollEnd', onScrollEnd);
-                };
-                function onError() {
-                    el.onload = new Function();
-                    el.removeEventListener('error', onError);
-                    window.removeEventListener('scroll', computeBySpeed);
-                    window.removeEventListener('scrollEnd', onScrollEnd);
-                }
-                el.addEventListener('error', onError);
-                setTimeout(function () {
-                    compute(el, options.time);
-                });
-            },
-            update: function update(el, binding) {
-                if (compareSrc(el.src, binding.value)) return;
-                el.style.opacity = 0;
-                el.style.transition = 'opacity ' + options.time / 2 + 'ms';
-                el.newSrc = binding.value;
-                setTimeout(function () {
-                    compute(el, options.time / 2);
-                }, 150);
-            }
-        });
-    }
-};
+    return Set;
+}();
 
-module.exports = lazyload;
+exports.default = Set;
 
 /***/ })
 /******/ ]);

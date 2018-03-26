@@ -1,3 +1,15 @@
+
+# Update v2.1.0
+
+## Add requestAnimationFrame polyfill.
+## Now img lazyload detects horizontal direction automatically
+## Imporve perfomence, since the scroll event liseners were as many as pictures * 2 before, there is only two liseners now. 
+
+
+# Next in V2.1.1
+
+## Preload, let you set a range to preload images before a image enters the viewport.
+
 # English doc
 
 # Finally Available on vue2, if you use v1, use `npm install vue-lazyload-img@1`
@@ -14,6 +26,8 @@ Use mobile mode if possible
 
 
 [bundle with webpack](http://docs.gomeminus.com/vue-lazyload-img/test/bundle.html)
+
+
 
 ## API
 
@@ -86,10 +100,7 @@ the released bundle is in:
 `dist/vue.lazyimg.min.js`
 `dist/vue.lazyimg.js`
 
-# roadmap
 
-* to support the API in v1 but not in v2 now
-* make a UI component system with future libs
 
 # Chinese doc
 # vue-lazyload-img
