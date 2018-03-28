@@ -6,8 +6,11 @@
 * Now img lazyload detects horizontal direction automatically
 * Imporve perfomence, since the scroll event liseners were as many as pictures * 2 before, there is only two liseners now. 
 
+## Update v2.1.1
 
-## Next in V2.1.1
+add .npmignore to exclude .babelrc
+
+## Next in V2.1.2
 
 * Preload, let you set a range to preload images before a image enters the viewport.
 
