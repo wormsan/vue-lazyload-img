@@ -1,32 +1,36 @@
-import scrollEnd from './scrollEnd.js'
-import Set from './Set.js'
+import Vue, { PluginObject, VNode, PluginFunction, VNodeDirective, VueConstructor} from 'vue/types'
+
+import ImageElement from './ImageElement'
+
+import scrollEnd from './scrollEnd'
+import Set from './Set'
 
 const scrollListeners = new Set
 const scrollEndListeners = new Set
 
-window.addEventListener('scroll', function (e) {
-    scrollListeners.forEach(listener => {
+window.addEventListener('scroll', function (e: UIEvent) {
+    scrollListeners.forEach((listener: Function) => {
         listener()
     })
 }, true)
 
-window.addEventListener('scrollEnd', function (e) {
-    scrollEndListeners.forEach(listener => {
+window.addEventListener('scrollEnd', function (e: UIEvent) {
+    scrollEndListeners.forEach((listener: Function) => {
         listener()
     })
 }, true)
 
-const compute = function(el, time, cb) {
+const compute = function(el: ImageElement, time: number, cb = function(){}) {
     const rect = el.getBoundingClientRect()
     if(((rect.bottom >=0 && rect.bottom <= window.screen.height) 
         || (rect.top >=0 && rect.top <= window.screen.height))
     && ((rect.right >=0 && rect.right <= window.screen.width) 
-        || (rect.left >=0 && rect.left <= window.screen.width))){
+        || (rect.left >=0 && rect.left <= window.screen.width))) {
         if(el.src != el.newSrc && !!el.newSrc){
             el.src = el.newSrc
             el.onload = function(){
                 el.style.opacity = '1'
-                el.onload = new Function
+                el.onload = function(){}
                 scrollListeners.delete(el.__scrollListener__)
                 scrollEndListeners.delete(el.__scrollEndListener__)
                 el.__scrollListener__ = null
@@ -39,12 +43,19 @@ const compute = function(el, time, cb) {
         }
     }
 }
+type getSpeedArgs =  {
+    lastPos: number,
+    lastSpeeds: Array<number>,
+    aveSpeed: number,
+}
 const getSpeed = function({
     lastPos,
     lastSpeeds,
     aveSpeed,
-}){
-    const curPos = document.body.getBoundingClientRect().top
+} : getSpeedArgs) {
+    const clientRect = document.body.getBoundingClientRect()
+    const curPos = clientRect.top
+    // const curPos = document.body.getBoundingClientRect().top
     let speed = lastPos - curPos
     if(lastSpeeds.length<10){
         lastSpeeds.push(speed)
@@ -53,7 +64,7 @@ const getSpeed = function({
         lastSpeeds.push(speed)
     }
     let sumSpeed = 0
-    lastSpeeds.forEach(function(speed){
+    lastSpeeds.forEach(function(speed: number){
         sumSpeed += speed
     })
     aveSpeed = Math.abs(sumSpeed/lastSpeeds.length)
@@ -64,34 +75,38 @@ const getSpeed = function({
         aveSpeed
     }
 }
-const compareSrc = function(src, newSrc) {
+const compareSrc = function(src: string, newSrc: string) {
     if(src.replace(/^http:/,'').replace(/^https:/,'').match(newSrc.replace(/^http:/,'').replace(/^https:/,''))){
         return true
     }else return false
 }
-
-const lazyload = {
-    install: (Vue, {
+type Options = {
+    time: number,
+    fade: boolean,
+    speed: number,
+}
+const Lazyload:PluginObject<Options> = {
+    install: (Vue: VueConstructor, {
         time = 300,
         fade = false,
         speed = 0,
-    }) => {
+    }: Options) => {
         if (speed > 0)
             scrollEnd()
         Vue.directive('lazyload', {
-            inserted (el, binding, vnode, oldVnode) {
-                if(!el)return
-                if(compareSrc(el.src,binding.value))return
-                if(fade)
-                    el.style.opacity = 0
-                if(!el.src){
+            inserted (el: ImageElement, binding: VNodeDirective, vnode: VNode, oldVnode: VNode) {
+                if (!el) return
+                if (compareSrc(el.src, binding.value)) return
+                if (fade)
+                    el.style.opacity = '0'
+                if (!el.src) {
                     el.src = 'data:image/gifbase64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
                 }
                 let speedInfo = {
                     lastPos: document.body.getBoundingClientRect().top,
                     lastSpeeds: [],
                     aveSpeed: 0,
-                }
+                } as getSpeedArgs
                 el.newSrc = binding.value
                 const computeBySpeed = function () {
                     if(!el.newSrc || el.newSrc === el.src)return
@@ -110,7 +125,7 @@ const lazyload = {
                 el.__scrollListener__  = computeBySpeed
                 el.__scrollEndListener__ = onScrollEnd
                 el.onload = function() {
-                    el.onload = new Function()
+                    el.onload = function(){}
                     el.removeEventListener('error', onError)
                     compute(el, time)
                     scrollListeners.add(computeBySpeed)
@@ -118,7 +133,7 @@ const lazyload = {
                         scrollEndListeners.add(onScrollEnd)
                 }
                 function onError () {
-                    el.onload = new Function()
+                    el.onload = function(){}
                     el.removeEventListener('error', onError)
                     scrollListeners.delete(computeBySpeed)
                     scrollEndListeners.delete(onScrollEnd)
@@ -128,9 +143,9 @@ const lazyload = {
                 //     compute(el, time)
                 // })
             },
-            update (el, binding) {
+            update (el: ImageElement, binding: VNodeDirective) {
                 if(compareSrc(el.src,binding.value))return
-                el.style.opacity = 0
+                el.style.opacity = '0'
                 el.style.transition = `opacity ${time/2}ms`
                 el.newSrc = binding.value
                 setTimeout(() => {
@@ -141,4 +156,4 @@ const lazyload = {
     }
 }
 
-export default lazyload
+export default Lazyload

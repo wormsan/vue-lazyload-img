@@ -1,8 +1,6 @@
-import Vue from 'vue'
-import Lazyload from '../src/index.js'
-
-
-
+// import Vue from 'vue'
+const Vue = require('vue')
+import Lazyload from '../src/index'
 Vue.use(Lazyload, {
     //ms
     time: 300,
@@ -26,7 +24,7 @@ const template = `
     </div>
 </div>
 `
-var a = new Vue({
+const a = new Vue({
     el: '#app',
     template,
     data: {
@@ -44,3 +42,4 @@ var a = new Vue({
     }
 })
 console.log(a)
+
