@@ -9,8 +9,10 @@ module.exports = {
     },
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.min.js',
+            vue: 'vue/dist/vue',
         },
+        // Add '.ts' and '.tsx' as a resolvable extension.
+        extensions: [".ts", ".tsx", ".js", ".d.ts"],
     },
     // externals: {
         // 'vue': 'Vue',
@@ -21,6 +23,12 @@ module.exports = {
                 test: /\.js$/,
                 loader: ['babel-loader']
             },
+            {
+                test: /\.ts$/,
+                use: {
+                    loader: 'ts-loader',
+                }
+            }
         ]
     },
 }

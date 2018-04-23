@@ -1,12 +1,16 @@
 {
   "author": "jalbaa",
-  "description": "",
+  "description": "A plugin of vue for image lazyload, especially optimized for mobile browser（vue图片懒加载插件，特别为移动端优化）",
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-flow": "^6.23.0",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
+    "sinon": "^4.5.0",
+    "ts-loader": "^3.5.0",
+    "typescript": "^2.8.3",
     "vue": "^2.1.4",
     "webpack": "^3.11.0"
   },
@@ -14,10 +18,10 @@
     "vue": "^2.0.0"
   },
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "dist/vue.lazyimg.js",
   "name": "vue-lazyload-img",
   "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
+  "readme": "README.md",
   "scripts": {
     "build": "webpack",
     "dev": "webpack --watch --config webpack.config.dev.js",
@@ -35,5 +39,6 @@
     "url": "https://github.com/JALBAA/vue-lazyload-img/issues"
   },
   "homepage": "https://github.com/JALBAA/vue-lazyload-img#readme",
-  "version": "2.1.1"
+  "version": "2.1.2",
+  "typings": "types/index.d.ts"
 }

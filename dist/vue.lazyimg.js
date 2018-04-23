@@ -81,64 +81,69 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
+var Lazyload = __webpack_require__(1);
 
-var _scrollEnd = __webpack_require__(1);
+exports.default = Lazyload;
 
-var _scrollEnd2 = _interopRequireDefault(_scrollEnd);
 
-var _Set = __webpack_require__(2);
+module.exports = Lazyload.default;
 
-var _Set2 = _interopRequireDefault(_Set);
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+"use strict";
 
-var scrollListeners = new _Set2.default();
-var scrollEndListeners = new _Set2.default();
-
+exports.__esModule = true;
+var scrollEnd_1 = __webpack_require__(2);
+var Set_1 = __webpack_require__(3);
+var scrollListeners = new Set_1["default"];
+var scrollEndListeners = new Set_1["default"];
+var screenHeight = document.documentElement;
 window.addEventListener('scroll', function (e) {
     scrollListeners.forEach(function (listener) {
         listener();
     });
 }, true);
-
 window.addEventListener('scrollEnd', function (e) {
     scrollEndListeners.forEach(function (listener) {
         listener();
     });
 }, true);
-
-var compute = function compute(el, time, cb) {
+var compute = function (el, time, preload, cb) {
+    if (preload === void 0) { preload = 0; }
+    if (cb === void 0) { cb = function () { }; }
     var rect = el.getBoundingClientRect();
-    if ((rect.bottom >= 0 && rect.bottom <= window.screen.height || rect.top >= 0 && rect.top <= window.screen.height) && (rect.right >= 0 && rect.right <= window.screen.width || rect.left >= 0 && rect.left <= window.screen.width)) {
+    if (((rect.bottom >= 0 - preload && rect.bottom <= window.screen.height + preload)
+        || (rect.top >= 0 - preload && rect.top <= window.screen.height + preload))
+        && ((rect.right >= 0 && rect.right <= window.screen.width)
+            || (rect.left >= 0 && rect.left <= window.screen.width))) {
         if (el.src != el.newSrc && !!el.newSrc) {
             el.src = el.newSrc;
             el.onload = function () {
                 el.style.opacity = '1';
-                el.onload = new Function();
-                scrollListeners.delete(el.__scrollListener__);
-                scrollEndListeners.delete(el.__scrollEndListener__);
+                el.onload = function () { };
+                scrollListeners["delete"](el.__scrollListener__);
+                scrollEndListeners["delete"](el.__scrollEndListener__);
                 el.__scrollListener__ = null;
                 el.__scrollEndListener__ = null;
             };
-            el.style.transition = 'opacity ' + time + 'ms';
-            if (cb) {
-                cb();
-            }
+            el.style.transition = "opacity " + time + "ms";
+            cb();
         }
     }
 };
-var getSpeed = function getSpeed(_ref) {
-    var lastPos = _ref.lastPos,
-        lastSpeeds = _ref.lastSpeeds,
-        aveSpeed = _ref.aveSpeed;
-
-    var curPos = document.body.getBoundingClientRect().top;
+var getSpeed = function (_a) {
+    var lastPos = _a.lastPos, lastSpeeds = _a.lastSpeeds, aveSpeed = _a.aveSpeed;
+    var clientRect = document.body.getBoundingClientRect();
+    var curPos = clientRect.top;
     var speed = lastPos - curPos;
     if (lastSpeeds.length < 10) {
         lastSpeeds.push(speed);
-    } else {
+    }
+    else {
         lastSpeeds.shift();
         lastSpeeds.push(speed);
     }
@@ -154,27 +159,25 @@ var getSpeed = function getSpeed(_ref) {
         aveSpeed: aveSpeed
     };
 };
-var compareSrc = function compareSrc(src, newSrc) {
-    if (src.replace(/^http:/, '').replace(/^https:/, '').match(newSrc.replace(/^http:/, '').replace(/^https:/, ''))) {
+var compareSrc = function (src, newSrc) {
+    if (src.replace(/^http:/, '').replace(/^https:/, '').match(newSrc.replace(/^http:/, '').replace(/^https:/, '')))
         return true;
-    } else return false;
+    else
+        return false;
 };
-
-var lazyload = {
-    install: function install(Vue, _ref2) {
-        var _ref2$time = _ref2.time,
-            time = _ref2$time === undefined ? 300 : _ref2$time,
-            _ref2$fade = _ref2.fade,
-            fade = _ref2$fade === undefined ? false : _ref2$fade,
-            _ref2$speed = _ref2.speed,
-            speed = _ref2$speed === undefined ? 0 : _ref2$speed;
-
-        if (speed > 0) (0, _scrollEnd2.default)();
+var Lazyload = {
+    install: function (Vue, _a) {
+        var _b = _a.time, time = _b === void 0 ? 300 : _b, _c = _a.fade, fade = _c === void 0 ? false : _c, _d = _a.speed, speed = _d === void 0 ? 0 : _d, _e = _a.preload, preload = _e === void 0 ? 0 : _e;
+        if (speed > 0)
+            scrollEnd_1["default"]();
         Vue.directive('lazyload', {
-            inserted: function inserted(el, binding, vnode, oldVnode) {
-                if (!el) return;
-                if (compareSrc(el.src, binding.value)) return;
-                if (fade) el.style.opacity = 0;
+            inserted: function (el, binding, vnode, oldVnode) {
+                if (!el)
+                    return;
+                if (compareSrc(el.src, binding.value))
+                    return;
+                if (fade)
+                    el.style.opacity = '0';
                 if (!el.src) {
                     el.src = 'data:image/gifbase64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
                 }
@@ -184,67 +187,78 @@ var lazyload = {
                     aveSpeed: 0
                 };
                 el.newSrc = binding.value;
-                var computeBySpeed = function computeBySpeed() {
-                    if (!el.newSrc || el.newSrc === el.src) return;
+                var computeBySpeed = function () {
+                    if (!el.newSrc || el.newSrc === el.src)
+                        return;
                     if (speed == 0) {
-                        compute(el, time);
+                        compute(el, time, preload);
                         return;
                     }
                     speedInfo = getSpeed(speedInfo);
-                    if (speedInfo.aveSpeed > speed) return;
-                    compute(el, time);
+                    if (speedInfo.aveSpeed > speed)
+                        return;
+                    compute(el, time, preload);
                 };
-                var onScrollEnd = function onScrollEnd() {
-                    if (!el.newSrc || el.newSrc === el.src) return;
-                    compute(el, time);
+                var onScrollEnd = function () {
+                    if (!el.newSrc || el.newSrc === el.src)
+                        return;
+                    compute(el, time, preload);
                 };
                 el.__scrollListener__ = computeBySpeed;
                 el.__scrollEndListener__ = onScrollEnd;
                 el.onload = function () {
-                    el.onload = new Function();
+                    el.onload = function () { };
                     el.removeEventListener('error', onError);
-                    compute(el, time);
+                    compute(el, time, preload);
                     scrollListeners.add(computeBySpeed);
-                    if (speed > 0) scrollEndListeners.add(onScrollEnd);
+                    if (speed > 0)
+                        scrollEndListeners.add(onScrollEnd);
                 };
                 function onError() {
-                    el.onload = new Function();
+                    el.onload = function () { };
                     el.removeEventListener('error', onError);
-                    scrollListeners.delete(computeBySpeed);
-                    scrollEndListeners.delete(onScrollEnd);
+                    scrollListeners["delete"](computeBySpeed);
+                    scrollEndListeners["delete"](onScrollEnd);
                 }
                 el.addEventListener('error', onError);
-                // setTimeout(function(){
-                //     compute(el, time)
-                // })
             },
-            update: function update(el, binding) {
-                if (compareSrc(el.src, binding.value)) return;
-                el.style.opacity = 0;
-                el.style.transition = 'opacity ' + time / 2 + 'ms';
+            update: function (el, binding) {
+                if (compareSrc(el.src, binding.value))
+                    return;
+                el.style.opacity = '0';
+                el.style.transition = "opacity " + time / 2 + "ms";
                 el.newSrc = binding.value;
                 setTimeout(function () {
-                    compute(el, time / 2);
+                    compute(el, time / 2, preload);
                 }, 150);
             }
         });
     }
 };
+exports["default"] = Lazyload;
 
-exports.default = lazyload;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-exports.default = function () {
+exports.__esModule = true;
+if (!window.requestAnimationFrame) {
+    if (window.webkitRequestAnimationFrame) {
+        window.requestAnimationFrame = window.webkitRequestAnimationFrame;
+    }
+    else {
+        window.requestAnimationFrame = function requestAnimationFrame(cb) {
+            setTimeout(function () {
+                cb(0);
+            }, 1000 / 60);
+            return 0;
+        };
+    }
+}
+function default_1() {
     var cntr = 0;
     var lastCntr = 0;
     var diff = 0;
@@ -267,73 +281,44 @@ exports.default = function () {
         diff = 0;
         cntr++;
     });
-};
-
-if (!window.requestAnimationFrame) {
-    if (window.webkitRequestAnimationFrame) {
-        window.requestAnimationFrame = window.webkitRequestAnimationFrame;
-    } else {
-        window.requestAnimationFrame = function (cb) {
-            setTimeout(function () {
-                cb();
-            }, 1000 / 60);
-        };
-    }
 }
+exports["default"] = default_1;
+
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// simple Set
+exports.__esModule = true;
 var cid = 0;
-
-var Set = function () {
+var Set = (function () {
     function Set() {
-        _classCallCheck(this, Set);
-
         this._map = {};
     }
-
-    _createClass(Set, [{
-        key: "add",
-        value: function add(obj) {
-            obj.__cid__ = cid;
-            cid++;
-            this._map[obj.__cid__] = obj;
-        }
-    }, {
-        key: "delete",
-        value: function _delete(obj) {
-            if (obj && obj.__cid__ && this._map.hasOwnProperty(obj.__cid__)) delete this._map[obj.__cid__];
-        }
-    }, {
-        key: "forEach",
-        value: function forEach(cb) {
-            for (var key in this._map) {
-                if (this._map.hasOwnProperty(key)) {
-                    cb(this._map[key]);
-                }
+    Set.prototype.add = function (obj) {
+        obj.__cid__ = cid;
+        cid++;
+        this._map[obj.__cid__] = obj;
+    };
+    Set.prototype["delete"] = function (obj) {
+        if (obj && obj.__cid__ && this._map.hasOwnProperty(obj.__cid__))
+            delete this._map[obj.__cid__];
+    };
+    Set.prototype.forEach = function (cb) {
+        for (var key in this._map) {
+            if (this._map.hasOwnProperty(key)) {
+                cb(this._map[key]);
             }
         }
-    }]);
-
+    };
     return Set;
-}();
+}());
+exports["default"] = Set;
 
-exports.default = Set;
 
 /***/ })
 /******/ ]);
 });
+//# sourceMappingURL=vue.lazyimg.js.map

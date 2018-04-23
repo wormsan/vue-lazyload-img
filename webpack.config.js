@@ -9,14 +9,22 @@ function build(name){
             libraryTarget: "umd",
             library: "Lazyload"
         },
+        resolve: {
+            extensions: [".ts", ".tsx", ".js", ".d.ts"],
+        },
         module: {
             rules: [
                 {
                     test: /\.js$/, 
-                    loader: "babel-loader"
-                }
+                    loader: "babel-loader",
+                },
+                {
+                    test: /\.ts$/, 
+                    loader: "ts-loader",
+                },
             ]
         },
+        devtool: 'sourcemap',
         plugins: []
     }
     if(name.match(/\.min/)){
@@ -25,27 +33,15 @@ function build(name){
                 compress: {
                     warnings: false,
                     drop_console: false,
-                }
+                },
+                sourceMap: true,
             })
         )
     }
-    if(name.match(/\.bundle/)){
-        config.resolve = {
-            alias: {
-                'vue': 'vue/dist/vue.min.js'
-            }
-        }
-        config.entry =  './test/bundle.test.js'
-        config.output = {
-            path: path.resolve(__dirname, 'test'),
-            filename: name,
-        }
-    }else{
-        config.externals = {
-            'vue': 'Vue',
-        }
-    }
+    // config.externals = {
+        // 'vue': 'Vue',
+    // }
     return config
 }
 
-module.exports = [build('vue.lazyimg.js'),build('vue.lazyload.bundle.js'), build('vue.lazyimg.min.js')]
+module.exports = [build('vue.lazyimg.js'), build('vue.lazyimg.min.js')]

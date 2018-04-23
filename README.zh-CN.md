@@ -1,13 +1,23 @@
-## v2.1.0升级
+## v2.1.0 更新
 
 * 加了一个requestAnimationFrame polyfill.
 * 现在lazyload自动检测横向了
 * 优化了一下性能，之前scroll的侦听器太多了，一张图片就有一个，现在改成只有两个了
 
 
-## 下一个版本要做的 v2.1.1
+## v2.1.1 更新
+
+* 添加.npmignore，过滤掉.babelrc，以防业务方没有装babel-preset-es2015跑不起来
+
+## v2.1.2 更新
 
 * 预加载，即允许用户设定一个范围，当图片还没有进如到视口中，也进行加载
+* 用ts重写了代码
+
+## 接下来
+
+* 支持url局部匹配，比如, `pic.400px.jpg` 或 `pic.200px.jpg`，让你可以自定义规则切换图片分辨率
+* 也许会支持SSR
 
 # Chinese doc
 # vue-lazyload-img
@@ -53,14 +63,23 @@ global options
 
 * 300 **(default, unit: ms)**
 
+#### preload: 允许用户设定一个范围，当图片还没进入屏幕时即开始加载
+
+* 0 **(default, unit: px)**
+
+
 ```
 Vue.use(Lazyload,{
-    // default false, recommand true
+    // 默认false， 推荐true
     fade: true,
-    // it's better not set the speed now
+    // 推荐不写这项，现在手机都很快了，加了这项，图片加载速度会变慢
+    // 这个选项会拖慢图片加载速度
+    // 但是如果你打开这个选项，能节省流量，因为只有页面停止20ms之后，才开始加载图片
     // speed: 20, 
-    // default 300, it's not necessary to set it I think
-    time: 300
+    // 默认300ms, 个人觉得没必要修改，可以不填
+    time: 300,
+    // 默认0px，竖直方向预加载图片，体验更好
+    preload: 500,
 })
 ```
 
