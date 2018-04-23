@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 function build(name){
     const config = {
-        entry: './src/index.ts',
+        entry: './src/index.js',
         output: {
             path: path.resolve(__dirname, 'dist'),
             filename: name,
@@ -38,22 +38,9 @@ function build(name){
             })
         )
     }
-    if(name.match(/\.bundle/)){
-        config.resolve = {
-            alias: {
-                'vue': 'vue/dist/vue.min.js'
-            }
-        }
-        config.entry =  './test/bundle.test.ts'
-        config.output = {
-            path: path.resolve(__dirname, 'test'),
-            filename: name,
-        }
-    }else{
-        config.externals = {
-            'vue': 'Vue',
-        }
-    }
+    // config.externals = {
+        // 'vue': 'Vue',
+    // }
     return config
 }
 

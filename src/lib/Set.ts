@@ -1,4 +1,5 @@
 // simple Set
+// will boom on server =.=
 let cid = 0
 export default class Set {
     private _map: {[cid: number ] : any}

@@ -7,6 +7,7 @@ import Set from './Set'
 
 const scrollListeners = new Set
 const scrollEndListeners = new Set
+const screenHeight = document.documentElement
 
 window.addEventListener('scroll', function (e: UIEvent) {
     scrollListeners.forEach((listener: Function) => {
@@ -20,15 +21,15 @@ window.addEventListener('scrollEnd', function (e: UIEvent) {
     })
 }, true)
 
-const compute = function(el: ImageElement, time: number, cb = function(){}) {
+const compute = function(el: ImageElement, time: number, preload: number = 0, cb: Function = function(){}) {
     const rect = el.getBoundingClientRect()
-    if(((rect.bottom >=0 && rect.bottom <= window.screen.height) 
-        || (rect.top >=0 && rect.top <= window.screen.height))
-    && ((rect.right >=0 && rect.right <= window.screen.width) 
-        || (rect.left >=0 && rect.left <= window.screen.width))) {
-        if(el.src != el.newSrc && !!el.newSrc){
+    if ( ((rect.bottom >= 0 - preload && rect.bottom <= window.screen.height + preload)
+        || (rect.top >= 0 - preload && rect.top <= window.screen.height + preload))
+    && ((rect.right >=0 && rect.right <= window.screen.width)
+        || (rect.left >=0 && rect.left <= window.screen.width)) ) {
+        if (el.src != el.newSrc && !!el.newSrc) {
             el.src = el.newSrc
-            el.onload = function(){
+            el.onload = function() {
                 el.style.opacity = '1'
                 el.onload = function(){}
                 scrollListeners.delete(el.__scrollListener__)
@@ -37,13 +38,11 @@ const compute = function(el: ImageElement, time: number, cb = function(){}) {
                 el.__scrollEndListener__ = null
             }
             el.style.transition = `opacity ${time}ms`
-            if(cb){
-                cb()
-            }
+            cb()
         }
     }
 }
-type getSpeedArgs =  {
+type GetSpeedArgs =  {
     lastPos: number,
     lastSpeeds: Array<number>,
     aveSpeed: number,
@@ -52,7 +51,7 @@ const getSpeed = function({
     lastPos,
     lastSpeeds,
     aveSpeed,
-} : getSpeedArgs) {
+} : GetSpeedArgs) {
     const clientRect = document.body.getBoundingClientRect()
     const curPos = clientRect.top
     // const curPos = document.body.getBoundingClientRect().top
@@ -72,25 +71,28 @@ const getSpeed = function({
     return {
         lastPos,
         lastSpeeds,
-        aveSpeed
+        aveSpeed,
     }
 }
 const compareSrc = function(src: string, newSrc: string) {
-    if(src.replace(/^http:/,'').replace(/^https:/,'').match(newSrc.replace(/^http:/,'').replace(/^https:/,''))){
+    if (src.replace(/^http:/,'').replace(/^https:/,'').match(newSrc.replace(/^http:/,'').replace(/^https:/,'')))
         return true
-    }else return false
+    else 
+        return false
 }
-type Options = {
-    time: number,
-    fade: boolean,
-    speed: number,
+type LazyLoadOptions = {
+    time?: number,
+    fade?: boolean,
+    speed?: number,
+    preload?: number,
 }
-const Lazyload:PluginObject<Options> = {
+const Lazyload:PluginObject<LazyLoadOptions> = {
     install: (Vue: VueConstructor, {
         time = 300,
         fade = false,
         speed = 0,
-    }: Options) => {
+        preload = 0,
+    }: LazyLoadOptions) => {
         if (speed > 0)
             scrollEnd()
         Vue.directive('lazyload', {
@@ -106,28 +108,28 @@ const Lazyload:PluginObject<Options> = {
                     lastPos: document.body.getBoundingClientRect().top,
                     lastSpeeds: [],
                     aveSpeed: 0,
-                } as getSpeedArgs
+                } as GetSpeedArgs
                 el.newSrc = binding.value
                 const computeBySpeed = function () {
                     if(!el.newSrc || el.newSrc === el.src)return
                     if (speed == 0) {
-                        compute(el, time) 
+                        compute(el, time, preload) 
                         return
                     }
                     speedInfo = getSpeed(speedInfo)
                     if(speedInfo.aveSpeed > speed)return
-                    compute(el, time)
+                    compute(el, time, preload)
                 }
                 const onScrollEnd = function(){
                     if(!el.newSrc || el.newSrc === el.src)return
-                    compute(el, time)
+                    compute(el, time, preload)
                 }
                 el.__scrollListener__  = computeBySpeed
                 el.__scrollEndListener__ = onScrollEnd
                 el.onload = function() {
                     el.onload = function(){}
                     el.removeEventListener('error', onError)
-                    compute(el, time)
+                    compute(el, time, preload)
                     scrollListeners.add(computeBySpeed)
                     if (speed > 0)
                         scrollEndListeners.add(onScrollEnd)
@@ -144,12 +146,12 @@ const Lazyload:PluginObject<Options> = {
                 // })
             },
             update (el: ImageElement, binding: VNodeDirective) {
-                if(compareSrc(el.src,binding.value))return
+                if (compareSrc(el.src,binding.value)) return
                 el.style.opacity = '0'
                 el.style.transition = `opacity ${time/2}ms`
                 el.newSrc = binding.value
                 setTimeout(() => {
-                    compute(el, time/2)
+                    compute(el, time/2, preload)
                 }, 150)
             },
         })

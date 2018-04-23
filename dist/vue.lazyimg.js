@@ -79,11 +79,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Lazyload = __webpack_require__(1);
+
+exports.default = Lazyload;
+
+
+module.exports = Lazyload.default;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 exports.__esModule = true;
-var scrollEnd_1 = __webpack_require__(1);
-var Set_1 = __webpack_require__(2);
+var scrollEnd_1 = __webpack_require__(2);
+var Set_1 = __webpack_require__(3);
 var scrollListeners = new Set_1["default"];
 var scrollEndListeners = new Set_1["default"];
+var screenHeight = document.documentElement;
 window.addEventListener('scroll', function (e) {
     scrollListeners.forEach(function (listener) {
         listener();
@@ -94,11 +112,12 @@ window.addEventListener('scrollEnd', function (e) {
         listener();
     });
 }, true);
-var compute = function (el, time, cb) {
+var compute = function (el, time, preload, cb) {
+    if (preload === void 0) { preload = 0; }
     if (cb === void 0) { cb = function () { }; }
     var rect = el.getBoundingClientRect();
-    if (((rect.bottom >= 0 && rect.bottom <= window.screen.height)
-        || (rect.top >= 0 && rect.top <= window.screen.height))
+    if (((rect.bottom >= 0 - preload && rect.bottom <= window.screen.height + preload)
+        || (rect.top >= 0 - preload && rect.top <= window.screen.height + preload))
         && ((rect.right >= 0 && rect.right <= window.screen.width)
             || (rect.left >= 0 && rect.left <= window.screen.width))) {
         if (el.src != el.newSrc && !!el.newSrc) {
@@ -112,9 +131,7 @@ var compute = function (el, time, cb) {
                 el.__scrollEndListener__ = null;
             };
             el.style.transition = "opacity " + time + "ms";
-            if (cb) {
-                cb();
-            }
+            cb();
         }
     }
 };
@@ -143,15 +160,14 @@ var getSpeed = function (_a) {
     };
 };
 var compareSrc = function (src, newSrc) {
-    if (src.replace(/^http:/, '').replace(/^https:/, '').match(newSrc.replace(/^http:/, '').replace(/^https:/, ''))) {
+    if (src.replace(/^http:/, '').replace(/^https:/, '').match(newSrc.replace(/^http:/, '').replace(/^https:/, '')))
         return true;
-    }
     else
         return false;
 };
 var Lazyload = {
     install: function (Vue, _a) {
-        var _b = _a.time, time = _b === void 0 ? 300 : _b, _c = _a.fade, fade = _c === void 0 ? false : _c, _d = _a.speed, speed = _d === void 0 ? 0 : _d;
+        var _b = _a.time, time = _b === void 0 ? 300 : _b, _c = _a.fade, fade = _c === void 0 ? false : _c, _d = _a.speed, speed = _d === void 0 ? 0 : _d, _e = _a.preload, preload = _e === void 0 ? 0 : _e;
         if (speed > 0)
             scrollEnd_1["default"]();
         Vue.directive('lazyload', {
@@ -175,25 +191,25 @@ var Lazyload = {
                     if (!el.newSrc || el.newSrc === el.src)
                         return;
                     if (speed == 0) {
-                        compute(el, time);
+                        compute(el, time, preload);
                         return;
                     }
                     speedInfo = getSpeed(speedInfo);
                     if (speedInfo.aveSpeed > speed)
                         return;
-                    compute(el, time);
+                    compute(el, time, preload);
                 };
                 var onScrollEnd = function () {
                     if (!el.newSrc || el.newSrc === el.src)
                         return;
-                    compute(el, time);
+                    compute(el, time, preload);
                 };
                 el.__scrollListener__ = computeBySpeed;
                 el.__scrollEndListener__ = onScrollEnd;
                 el.onload = function () {
                     el.onload = function () { };
                     el.removeEventListener('error', onError);
-                    compute(el, time);
+                    compute(el, time, preload);
                     scrollListeners.add(computeBySpeed);
                     if (speed > 0)
                         scrollEndListeners.add(onScrollEnd);
@@ -213,7 +229,7 @@ var Lazyload = {
                 el.style.transition = "opacity " + time / 2 + "ms";
                 el.newSrc = binding.value;
                 setTimeout(function () {
-                    compute(el, time / 2);
+                    compute(el, time / 2, preload);
                 }, 150);
             }
         });
@@ -223,7 +239,7 @@ exports["default"] = Lazyload;
 
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -270,7 +286,7 @@ exports["default"] = default_1;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

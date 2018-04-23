@@ -99,36 +99,41 @@ module.exports = g;
 
 "use strict";
 
-exports.__esModule = true;
-var Vue = __webpack_require__(2);
-var index_1 = __webpack_require__(6);
-Vue.use(index_1["default"], {
+
+var _vueLazyimg = __webpack_require__(10);
+
+var _vueLazyimg2 = _interopRequireDefault(_vueLazyimg);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import Vue from 'vue'
+var Vue = __webpack_require__(6);
+
+Vue.use(_vueLazyimg2.default, {
+    //ms
     time: 300,
     fade: true,
-    speed: 0
+    speed: 0,
+    // px
+    preload: 500
 });
-var template = "\n<div id=\"app\" >\n    <div id=\"hori\" style=\"overflow:scroll;\">\n        <div  style=\"display:-webkit-box;width:3000px;height:300px;\">\n            <img v-for=\"img in imgs\"\n                v-lazyload=\"img\"\n                src=\"./images/blocker.jpg\" \n                style=\"display:block;height:400px;\">    \n        </div>\n    </div>\n    <div id=\"container\"  v-for=\"img in imgs\" >\n        <img v-lazyload=\"img\"\n            src=\"./images/blocker.jpg\" \n            style=\"display:block;width:100%;\">\n    </div>\n</div>\n";
+var template = '\n<div id="app" >\n    <div id="hori" style="overflow:scroll;">\n        <div  style="display:-webkit-box;width:3000px;height:300px;">\n            <img v-for="img in imgs"\n                v-lazyload="img"\n                src="./images/blocker.jpg" \n                style="display:block;height:400px;">    \n        </div>\n    </div>\n    <div id="container"  v-for="img in imgs" >\n        <img v-lazyload="img"\n            src="./images/blocker.jpg" \n            style="display:block;width:100%;">\n    </div>\n</div>\n';
 var a = new Vue({
     el: '#app',
     template: template,
     data: {
-        imgs: [
-            './images/1.jpg',
-            './images/2.jpg',
-            './images/3.jpg',
-            './images/4.jpg',
-            './images/5.jpg',
-            './images/6.jpg',
-            './images/7.jpg',
-            './images/8.jpg'
-        ]
+        imgs: ['./images/1.jpg', './images/2.jpg', './images/3.jpg', './images/4.jpg', './images/5.jpg',
+        // 'http://ee/images/5.jpg',
+        './images/6.jpg', './images/7.jpg', './images/8.jpg']
     }
 });
-console.log(a);
-
 
 /***/ }),
-/* 2 */
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10029,10 +10034,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
   return Vue;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(3).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(7).setImmediate))
 
 /***/ }),
-/* 3 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10086,7 +10091,7 @@ exports._unrefActive = exports.active = function (item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(4);
+__webpack_require__(8);
 // On some exotic environments, it's not clear which object `setimmeidate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -10095,7 +10100,7 @@ exports.clearImmediate = typeof self !== "undefined" && self.clearImmediate || t
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 4 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10283,10 +10288,10 @@ exports.clearImmediate = typeof self !== "undefined" && self.clearImmediate || t
     attachTo.setImmediate = setImmediate;
     attachTo.clearImmediate = clearImmediate;
 })(typeof self === "undefined" ? typeof global === "undefined" ? undefined : global : self);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(9)))
 
 /***/ }),
-/* 5 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10479,233 +10484,373 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 6 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
-exports.__esModule = true;
-var scrollEnd_1 = __webpack_require__(7);
-var Set_1 = __webpack_require__(8);
-var scrollListeners = new Set_1["default"];
-var scrollEndListeners = new Set_1["default"];
-window.addEventListener('scroll', function (e) {
-    scrollListeners.forEach(function (listener) {
-        listener();
-    });
-}, true);
-window.addEventListener('scrollEnd', function (e) {
-    scrollEndListeners.forEach(function (listener) {
-        listener();
-    });
-}, true);
-var compute = function (el, time, cb) {
-    if (cb === void 0) { cb = function () { }; }
-    var rect = el.getBoundingClientRect();
-    if (((rect.bottom >= 0 && rect.bottom <= window.screen.height)
-        || (rect.top >= 0 && rect.top <= window.screen.height))
-        && ((rect.right >= 0 && rect.right <= window.screen.width)
-            || (rect.left >= 0 && rect.left <= window.screen.width))) {
-        if (el.src != el.newSrc && !!el.newSrc) {
-            el.src = el.newSrc;
-            el.onload = function () {
-                el.style.opacity = '1';
-                el.onload = function () { };
-                scrollListeners["delete"](el.__scrollListener__);
-                scrollEndListeners["delete"](el.__scrollEndListener__);
-                el.__scrollListener__ = null;
-                el.__scrollEndListener__ = null;
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+(function webpackUniversalModuleDefinition(root, factory) {
+    if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') exports["Lazyload"] = factory();else root["Lazyload"] = factory();
+})(typeof self !== 'undefined' ? self : undefined, function () {
+    return (/******/function (modules) {
+            // webpackBootstrap
+            /******/ // The module cache
+            /******/var installedModules = {};
+            /******/
+            /******/ // The require function
+            /******/function __webpack_require__(moduleId) {
+                /******/
+                /******/ // Check if module is in cache
+                /******/if (installedModules[moduleId]) {
+                    /******/return installedModules[moduleId].exports;
+                    /******/
+                }
+                /******/ // Create a new module (and put it into the cache)
+                /******/var module = installedModules[moduleId] = {
+                    /******/i: moduleId,
+                    /******/l: false,
+                    /******/exports: {}
+                    /******/ };
+                /******/
+                /******/ // Execute the module function
+                /******/modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+                /******/
+                /******/ // Flag the module as loaded
+                /******/module.l = true;
+                /******/
+                /******/ // Return the exports of the module
+                /******/return module.exports;
+                /******/
+            }
+            /******/
+            /******/
+            /******/ // expose the modules object (__webpack_modules__)
+            /******/__webpack_require__.m = modules;
+            /******/
+            /******/ // expose the module cache
+            /******/__webpack_require__.c = installedModules;
+            /******/
+            /******/ // define getter function for harmony exports
+            /******/__webpack_require__.d = function (exports, name, getter) {
+                /******/if (!__webpack_require__.o(exports, name)) {
+                    /******/Object.defineProperty(exports, name, {
+                        /******/configurable: false,
+                        /******/enumerable: true,
+                        /******/get: getter
+                        /******/ });
+                    /******/
+                }
+                /******/
             };
-            el.style.transition = "opacity " + time + "ms";
-            if (cb) {
-                cb();
-            }
-        }
-    }
-};
-var getSpeed = function (_a) {
-    var lastPos = _a.lastPos, lastSpeeds = _a.lastSpeeds, aveSpeed = _a.aveSpeed;
-    var clientRect = document.body.getBoundingClientRect();
-    var curPos = clientRect.top;
-    var speed = lastPos - curPos;
-    if (lastSpeeds.length < 10) {
-        lastSpeeds.push(speed);
-    }
-    else {
-        lastSpeeds.shift();
-        lastSpeeds.push(speed);
-    }
-    var sumSpeed = 0;
-    lastSpeeds.forEach(function (speed) {
-        sumSpeed += speed;
-    });
-    aveSpeed = Math.abs(sumSpeed / lastSpeeds.length);
-    lastPos = curPos;
-    return {
-        lastPos: lastPos,
-        lastSpeeds: lastSpeeds,
-        aveSpeed: aveSpeed
-    };
-};
-var compareSrc = function (src, newSrc) {
-    if (src.replace(/^http:/, '').replace(/^https:/, '').match(newSrc.replace(/^http:/, '').replace(/^https:/, ''))) {
-        return true;
-    }
-    else
-        return false;
-};
-var Lazyload = {
-    install: function (Vue, _a) {
-        var _b = _a.time, time = _b === void 0 ? 300 : _b, _c = _a.fade, fade = _c === void 0 ? false : _c, _d = _a.speed, speed = _d === void 0 ? 0 : _d;
-        if (speed > 0)
-            scrollEnd_1["default"]();
-        Vue.directive('lazyload', {
-            inserted: function (el, binding, vnode, oldVnode) {
-                if (!el)
-                    return;
-                if (compareSrc(el.src, binding.value))
-                    return;
-                if (fade)
-                    el.style.opacity = '0';
-                if (!el.src) {
-                    el.src = 'data:image/gifbase64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-                }
-                var speedInfo = {
-                    lastPos: document.body.getBoundingClientRect().top,
-                    lastSpeeds: [],
-                    aveSpeed: 0
+            /******/
+            /******/ // getDefaultExport function for compatibility with non-harmony modules
+            /******/__webpack_require__.n = function (module) {
+                /******/var getter = module && module.__esModule ?
+                /******/function getDefault() {
+                    return module['default'];
+                } :
+                /******/function getModuleExports() {
+                    return module;
                 };
-                el.newSrc = binding.value;
-                var computeBySpeed = function () {
-                    if (!el.newSrc || el.newSrc === el.src)
-                        return;
-                    if (speed == 0) {
-                        compute(el, time);
-                        return;
+                /******/__webpack_require__.d(getter, 'a', getter);
+                /******/return getter;
+                /******/
+            };
+            /******/
+            /******/ // Object.prototype.hasOwnProperty.call
+            /******/__webpack_require__.o = function (object, property) {
+                return Object.prototype.hasOwnProperty.call(object, property);
+            };
+            /******/
+            /******/ // __webpack_public_path__
+            /******/__webpack_require__.p = "";
+            /******/
+            /******/ // Load entry module and return exports
+            /******/return __webpack_require__(__webpack_require__.s = 0);
+            /******/
+        }(
+        /************************************************************************/
+        /******/[
+        /* 0 */
+        /***/function (module, exports, __webpack_require__) {
+
+            "use strict";
+
+            Object.defineProperty(exports, "__esModule", {
+                value: true
+            });
+            var Lazyload = __webpack_require__(1);
+
+            exports.default = Lazyload;
+
+            module.exports = Lazyload.default;
+
+            /***/
+        },
+        /* 1 */
+        /***/function (module, exports, __webpack_require__) {
+
+            "use strict";
+
+            exports.__esModule = true;
+            var scrollEnd_1 = __webpack_require__(2);
+            var Set_1 = __webpack_require__(3);
+            var scrollListeners = new Set_1["default"]();
+            var scrollEndListeners = new Set_1["default"]();
+            var screenHeight = document.documentElement;
+            window.addEventListener('scroll', function (e) {
+                scrollListeners.forEach(function (listener) {
+                    listener();
+                });
+            }, true);
+            window.addEventListener('scrollEnd', function (e) {
+                scrollEndListeners.forEach(function (listener) {
+                    listener();
+                });
+            }, true);
+            var compute = function compute(el, time, preload, cb) {
+                if (preload === void 0) {
+                    preload = 0;
+                }
+                if (cb === void 0) {
+                    cb = function cb() {};
+                }
+                var rect = el.getBoundingClientRect();
+                if ((rect.bottom >= 0 - preload && rect.bottom <= window.screen.height + preload || rect.top >= 0 - preload && rect.top <= window.screen.height + preload) && (rect.right >= 0 && rect.right <= window.screen.width || rect.left >= 0 && rect.left <= window.screen.width)) {
+                    if (el.src != el.newSrc && !!el.newSrc) {
+                        el.src = el.newSrc;
+                        el.onload = function () {
+                            el.style.opacity = '1';
+                            el.onload = function () {};
+                            scrollListeners["delete"](el.__scrollListener__);
+                            scrollEndListeners["delete"](el.__scrollEndListener__);
+                            el.__scrollListener__ = null;
+                            el.__scrollEndListener__ = null;
+                        };
+                        el.style.transition = "opacity " + time + "ms";
+                        cb();
                     }
-                    speedInfo = getSpeed(speedInfo);
-                    if (speedInfo.aveSpeed > speed)
-                        return;
-                    compute(el, time);
-                };
-                var onScrollEnd = function () {
-                    if (!el.newSrc || el.newSrc === el.src)
-                        return;
-                    compute(el, time);
-                };
-                el.__scrollListener__ = computeBySpeed;
-                el.__scrollEndListener__ = onScrollEnd;
-                el.onload = function () {
-                    el.onload = function () { };
-                    el.removeEventListener('error', onError);
-                    compute(el, time);
-                    scrollListeners.add(computeBySpeed);
-                    if (speed > 0)
-                        scrollEndListeners.add(onScrollEnd);
-                };
-                function onError() {
-                    el.onload = function () { };
-                    el.removeEventListener('error', onError);
-                    scrollListeners["delete"](computeBySpeed);
-                    scrollEndListeners["delete"](onScrollEnd);
                 }
-                el.addEventListener('error', onError);
-            },
-            update: function (el, binding) {
-                if (compareSrc(el.src, binding.value))
-                    return;
-                el.style.opacity = '0';
-                el.style.transition = "opacity " + time / 2 + "ms";
-                el.newSrc = binding.value;
-                setTimeout(function () {
-                    compute(el, time / 2);
-                }, 150);
+            };
+            var getSpeed = function getSpeed(_a) {
+                var lastPos = _a.lastPos,
+                    lastSpeeds = _a.lastSpeeds,
+                    aveSpeed = _a.aveSpeed;
+                var clientRect = document.body.getBoundingClientRect();
+                var curPos = clientRect.top;
+                var speed = lastPos - curPos;
+                if (lastSpeeds.length < 10) {
+                    lastSpeeds.push(speed);
+                } else {
+                    lastSpeeds.shift();
+                    lastSpeeds.push(speed);
+                }
+                var sumSpeed = 0;
+                lastSpeeds.forEach(function (speed) {
+                    sumSpeed += speed;
+                });
+                aveSpeed = Math.abs(sumSpeed / lastSpeeds.length);
+                lastPos = curPos;
+                return {
+                    lastPos: lastPos,
+                    lastSpeeds: lastSpeeds,
+                    aveSpeed: aveSpeed
+                };
+            };
+            var compareSrc = function compareSrc(src, newSrc) {
+                if (src.replace(/^http:/, '').replace(/^https:/, '').match(newSrc.replace(/^http:/, '').replace(/^https:/, ''))) return true;else return false;
+            };
+            var Lazyload = {
+                install: function install(Vue, _a) {
+                    var _b = _a.time,
+                        time = _b === void 0 ? 300 : _b,
+                        _c = _a.fade,
+                        fade = _c === void 0 ? false : _c,
+                        _d = _a.speed,
+                        speed = _d === void 0 ? 0 : _d,
+                        _e = _a.preload,
+                        preload = _e === void 0 ? 0 : _e;
+                    if (speed > 0) scrollEnd_1["default"]();
+                    Vue.directive('lazyload', {
+                        inserted: function inserted(el, binding, vnode, oldVnode) {
+                            if (!el) return;
+                            if (compareSrc(el.src, binding.value)) return;
+                            if (fade) el.style.opacity = '0';
+                            if (!el.src) {
+                                el.src = 'data:image/gifbase64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+                            }
+                            var speedInfo = {
+                                lastPos: document.body.getBoundingClientRect().top,
+                                lastSpeeds: [],
+                                aveSpeed: 0
+                            };
+                            el.newSrc = binding.value;
+                            var computeBySpeed = function computeBySpeed() {
+                                if (!el.newSrc || el.newSrc === el.src) return;
+                                if (speed == 0) {
+                                    compute(el, time, preload);
+                                    return;
+                                }
+                                speedInfo = getSpeed(speedInfo);
+                                if (speedInfo.aveSpeed > speed) return;
+                                compute(el, time, preload);
+                            };
+                            var onScrollEnd = function onScrollEnd() {
+                                if (!el.newSrc || el.newSrc === el.src) return;
+                                compute(el, time, preload);
+                            };
+                            el.__scrollListener__ = computeBySpeed;
+                            el.__scrollEndListener__ = onScrollEnd;
+                            el.onload = function () {
+                                el.onload = function () {};
+                                el.removeEventListener('error', onError);
+                                compute(el, time, preload);
+                                scrollListeners.add(computeBySpeed);
+                                if (speed > 0) scrollEndListeners.add(onScrollEnd);
+                            };
+                            function onError() {
+                                el.onload = function () {};
+                                el.removeEventListener('error', onError);
+                                scrollListeners["delete"](computeBySpeed);
+                                scrollEndListeners["delete"](onScrollEnd);
+                            }
+                            el.addEventListener('error', onError);
+                        },
+                        update: function update(el, binding) {
+                            if (compareSrc(el.src, binding.value)) return;
+                            el.style.opacity = '0';
+                            el.style.transition = "opacity " + time / 2 + "ms";
+                            el.newSrc = binding.value;
+                            setTimeout(function () {
+                                compute(el, time / 2, preload);
+                            }, 150);
+                        }
+                    });
+                }
+            };
+            exports["default"] = Lazyload;
+
+            /***/
+        },
+        /* 2 */
+        /***/function (module, exports, __webpack_require__) {
+
+            "use strict";
+
+            exports.__esModule = true;
+            if (!window.requestAnimationFrame) {
+                if (window.webkitRequestAnimationFrame) {
+                    window.requestAnimationFrame = window.webkitRequestAnimationFrame;
+                } else {
+                    window.requestAnimationFrame = function requestAnimationFrame(cb) {
+                        setTimeout(function () {
+                            cb(0);
+                        }, 1000 / 60);
+                        return 0;
+                    };
+                }
             }
-        });
-    }
+            function default_1() {
+                var cntr = 0;
+                var lastCntr = 0;
+                var diff = 0;
+                var scrollEnd = document.createEvent('HTMLEvents');
+                scrollEnd.initEvent('scrollEnd', true, false);
+                scrollEnd.eventType = 'message';
+                function enterFrame() {
+                    if (cntr !== lastCntr) {
+                        diff++;
+                        if (diff === 5) {
+                            window.dispatchEvent(scrollEnd);
+                            cntr = lastCntr;
+                        }
+                    }
+                    requestAnimationFrame(enterFrame);
+                }
+                window.requestAnimationFrame(enterFrame);
+                window.addEventListener('scroll', function () {
+                    lastCntr = cntr;
+                    diff = 0;
+                    cntr++;
+                });
+            }
+            exports["default"] = default_1;
+
+            /***/
+        },
+        /* 3 */
+        /***/function (module, exports, __webpack_require__) {
+
+            "use strict";
+
+            exports.__esModule = true;
+            var cid = 0;
+            var Set = function () {
+                function Set() {
+                    this._map = {};
+                }
+                Set.prototype.add = function (obj) {
+                    obj.__cid__ = cid;
+                    cid++;
+                    this._map[obj.__cid__] = obj;
+                };
+                Set.prototype["delete"] = function (obj) {
+                    if (obj && obj.__cid__ && this._map.hasOwnProperty(obj.__cid__)) delete this._map[obj.__cid__];
+                };
+                Set.prototype.forEach = function (cb) {
+                    for (var key in this._map) {
+                        if (this._map.hasOwnProperty(key)) {
+                            cb(this._map[key]);
+                        }
+                    }
+                };
+                return Set;
+            }();
+            exports["default"] = Set;
+
+            /***/
+        }]
+        /******/)
+    );
+});
+//# sourceMappingURL=vue.lazyimg.js.map
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)(module)))
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function () {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function get() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function get() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
 };
-exports["default"] = Lazyload;
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-if (!window.requestAnimationFrame) {
-    if (window.webkitRequestAnimationFrame) {
-        window.requestAnimationFrame = window.webkitRequestAnimationFrame;
-    }
-    else {
-        window.requestAnimationFrame = function requestAnimationFrame(cb) {
-            setTimeout(function () {
-                cb(0);
-            }, 1000 / 60);
-            return 0;
-        };
-    }
-}
-function default_1() {
-    var cntr = 0;
-    var lastCntr = 0;
-    var diff = 0;
-    var scrollEnd = document.createEvent('HTMLEvents');
-    scrollEnd.initEvent('scrollEnd', true, false);
-    scrollEnd.eventType = 'message';
-    function enterFrame() {
-        if (cntr !== lastCntr) {
-            diff++;
-            if (diff === 5) {
-                window.dispatchEvent(scrollEnd);
-                cntr = lastCntr;
-            }
-        }
-        requestAnimationFrame(enterFrame);
-    }
-    window.requestAnimationFrame(enterFrame);
-    window.addEventListener('scroll', function () {
-        lastCntr = cntr;
-        diff = 0;
-        cntr++;
-    });
-}
-exports["default"] = default_1;
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-exports.__esModule = true;
-var cid = 0;
-var Set = (function () {
-    function Set() {
-        this._map = {};
-    }
-    Set.prototype.add = function (obj) {
-        obj.__cid__ = cid;
-        cid++;
-        this._map[obj.__cid__] = obj;
-    };
-    Set.prototype["delete"] = function (obj) {
-        if (obj && obj.__cid__ && this._map.hasOwnProperty(obj.__cid__))
-            delete this._map[obj.__cid__];
-    };
-    Set.prototype.forEach = function (cb) {
-        for (var key in this._map) {
-            if (this._map.hasOwnProperty(key)) {
-                cb(this._map[key]);
-            }
-        }
-    };
-    return Set;
-}());
-exports["default"] = Set;
-
 
 /***/ })
 /******/ ]);

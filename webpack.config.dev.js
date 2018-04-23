@@ -1,6 +1,6 @@
 var path = require('path')
 module.exports = {
-    entry: './test/bundle.test.ts',
+    entry: './test/bundle.test.js',
     output: {
         path: path.resolve(__dirname, 'test'),
         filename: 'vue.lazyload.bundle.js',
@@ -27,9 +27,6 @@ module.exports = {
                 test: /\.ts$/,
                 use: {
                     loader: 'ts-loader',
-                    options: {
-                        transpileOnly: true,
-                    }
                 }
             }
         ]

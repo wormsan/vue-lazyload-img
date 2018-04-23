@@ -8,11 +8,17 @@
 
 ## Update v2.1.1
 
-add .npmignore to exclude .babelrc
+* Add .npmignore to exclude .babelrc
 
-## Next in V2.1.2
+## Update in V2.1.2
 
-* Preload, let you set a range to preload images before a image enters the viewport.
+* Preload, let you set a range to preload images before an image enters the viewport.
+* Rewrite with Typescript, add d.ts, make developing easier.
+
+## Next
+
+* Support partial-match image URLs, eg. `pic.400px.jpg` or `pic.200px.jpg`, let you switch resolution of images by some custom rules.
+* Maybe SSR.
 
 # English doc
 
@@ -28,10 +34,7 @@ Use mobile mode if possible
 
 [var with script tag](http://docs.gomeminus.com/vue-lazyload-img/test/var.html)
 
-
 [bundle with webpack](http://docs.gomeminus.com/vue-lazyload-img/test/bundle.html)
-
-
 
 ## API
 
@@ -55,14 +58,23 @@ global options
 
 * 300 **(default, unit: ms)**
 
+
+#### preload: set a range(vertical) to preload images before an image enters the viewport.
+
+* 0 **(default, unit: px)**
+
 ```
 Vue.use(Lazyload,{
     // default false, recommand true
     fade: true,
-    // it's better not set the speed now
-    // speed: 20, 
-    // default 300, it's not necessary to set it I think
-    time: 300
+    // it's better not set the speed now (because cellphones perfomance is better)
+    // this option make images show slower
+    // but if you open it, it does save network traffic data
+    // speed: 20,
+    // default 300, mostly, it's not necessary to set it
+    time: 300,
+    // unit:px, default 0, it allows the lazyload manager loads images(vertical) before an image appeard in screen
+    preload: 500,
 })
 ```
 
