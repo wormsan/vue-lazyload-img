@@ -15,6 +15,10 @@
 * Preload, let you set a range to preload images before an image enters the viewport.
 * Rewrite with Typescript, add d.ts, make developing easier.
 
+## Update in V2.1.3
+
+* fix wrong export of typings
+
 ## Next
 
 * Support partial-match image URLs, eg. `pic.400px.jpg` or `pic.200px.jpg`, let you switch resolution of images by some custom rules.
